@@ -1,0 +1,20 @@
+name: prcheck
+run-name: Deploying the mod...
+
+on:
+  pull_request:
+    types:
+      - opened
+    paths:
+      - 'levels/**'
+
+jobs:
+  prcheck:
+    if: >-
+      github.event.pull_request.user.login == github.event.pull_request.user.login
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get repository files
+        uses: actions/checkout@v6
+
+      
