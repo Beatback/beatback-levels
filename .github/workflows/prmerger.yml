@@ -1,5 +1,5 @@
-name: prcheck
-run-name: Checking the pull request...
+name: prmerger
+run-name: Checking and merging the pull request...
 
 on:
   pull_request_target:
@@ -36,9 +36,17 @@ jobs:
       contents: write
       pull-requests: write
     steps:
+      - name: Generate GitHub App token
+        id: app-token
+        uses: actions/create-github-app-token@v3
+        with:
+          client-id: ${{ vars.MERGER_CLIENT_ID }}
+          private-key: ${{ secrets.MERGER_PRIVATE_KEY }}
+          permission-contents: write
+          permission-pull-requests: write
       - name: Accept the pull request
         env:
           REPO: ${{ github.repository }}
           PR: ${{ github.event.pull_request.number }}
-          GH_TOKEN: ${{ github.token }}
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
         run: gh pr merge "$PR" --auto -r -R "$REPO"
