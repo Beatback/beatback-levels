@@ -10,11 +10,11 @@ on:
 
 jobs:
   prcheck:
-    if: >-
-      github.event.pull_request.user.login == github.event.pull_request.user.login
     runs-on: ubuntu-latest
     steps:
-      - name: Get repository files
-        uses: actions/checkout@v6
+      - name: print stuff
+        env:
+          PRINT: ${{ github.event.pull_request.changed_files }}
+        run: echo "$PRINT"
 
       
