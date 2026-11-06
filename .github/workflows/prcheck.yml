@@ -13,7 +13,7 @@ jobs:
   prcheck:
     runs-on: ubuntu-latest
     permissions:
-      pull-requests: write
+      contents: write
     steps:
       - name: Download python script
         env:
