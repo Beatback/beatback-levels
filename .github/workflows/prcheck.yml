@@ -7,16 +7,27 @@ on:
       - opened
     paths:
       - 'levels/**'
+      - 'info/**'
 
 jobs:
   prcheck:
     runs-on: ubuntu-latest
     steps:
-      - name: print stuff
+      - name: Download python script
+        env:
+          REPO: ${{ github.repository }}
+          GH_TOKEN: ${{ github.token }}
+        run: gh repo read-file prcheck.py -R "$REPO" --output prcheck.py
+      - name: Check the PR for validity
+        env:
+          REPO: ${{ github.repository }}
+          PR: ${{ github.event.pull_request.number }}
+          PR_AUTHOR: ${{ github.event.pull_request.user.login }}
+          GH_TOKEN: ${{ github.token }}
+        run: python3 prcheck.py
+      - name: Accept the pull request
         env:
           REPO: ${{ github.repository }}
           PR: ${{ github.event.pull_request.number }}
           GH_TOKEN: ${{ github.token }}
-        run: gh pr diff "$PR" --name-only -R "$REPO"
-
-      
+        run: gh pr merge "$PR" -R "$REPO"
