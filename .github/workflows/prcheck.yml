@@ -13,8 +13,8 @@ jobs:
   prcheck:
     runs-on: ubuntu-latest
     permissions:
-      contents: write
-      pull-requests: write
+      contents: read
+      pull-requests: read
     steps:
       - name: Download python script
         env:
@@ -28,9 +28,17 @@ jobs:
           PR_AUTHOR: ${{ github.event.pull_request.user.login }}
           GH_TOKEN: ${{ github.token }}
         run: python3 prcheck.py
+
+  prmerge:
+    needs: prcheck
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
       - name: Accept the pull request
         env:
           REPO: ${{ github.repository }}
           PR: ${{ github.event.pull_request.number }}
           GH_TOKEN: ${{ github.token }}
-        run: gh pr merge "$PR" -r -R "$REPO"
+        run: gh pr merge "$PR" --auto -r -R "$REPO"
