@@ -1,5 +1,5 @@
 name: prcheck
-run-name: Deploying the mod...
+run-name: Checking the pull request...
 
 on:
   pull_request:
@@ -14,7 +14,8 @@ jobs:
     steps:
       - name: print stuff
         env:
-          PRINT: ${{ github.event.pull_request.changed_files }}
-        run: echo "$PRINT"
+          REPO: ${{ github.repository }}
+          PR: ${{ github.event.pull_request.number }}
+        run: gh pr diff "$PR" --name-only -R "$REPO"
 
       
